@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel Budget</title>
+  <style>
+    body {
+      background-image: url(travel-website.jpg);
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .budget-container, .results-container {
+      width: 600px;
+      background: #F9F1F0;
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .input-group {
+      margin: 15px 0;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .input-group input, .input-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #60A3D9;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #60A3D9;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      justify-content: space-around;
+    }
+
+    button:hover {
+      background-color: #508acb;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      margin: 15px 0;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+      margin: 40px 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.3s ease, z-index 0.3s ease;
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      margin: 0 0 10px 0;
+      color: #333;
+    }
+
+    .card p {
+      margin: 0;
+      color: #555;
+    }
+
+    .card:hover {
+      z-index: 10;
+      transform: scale(1.1);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      border: 2px solid #60A3D9;
+      border-radius: 10px;
+    }
+
+    .results-container ul {
+      list-style-type: ;
+      padding-left: 0;
+    }
+
+    .results-container li {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="budget-container">
+    <h1>Travel Budget</h1>
+    <div class="button-group">
+      <button onclick="showInBudget()">In Budget</button>
+      <button onclick="showOverBudget()">Any Budget</button>
+    </div>
+
+    <div class="input-group" id="in-budget-group" style="display:none;">
+      <label for="in-budget">Enter Your Budget Range (₹5000)</label>
+        <input type="number" id="in-budget" min="5000" max="5000" step="500" placeholder="Enter your budget" value="5000">
+    </div>
+
+    <div class="input-group" id="over-budget-group" style="display:none;">
+      <label for="over-budget">Enter Your Any Budget Value</label>
+      <input type="number" id="over-budget" min="10001" placeholder="Enter over budget value">
+    </div>
+
+    <div class="input-group" id="state-group">
+      <label for="state-select">Current State</label>
+      <select id="state-select">
+        <option value="Madhya Pradesh" selected>Madhya Pradesh</option>
+      </select>
+    </div>
+
+    <div class="input-group" id="city-group">
+      <label for="city-select">Current  City</label>
+      <select id="city-select">
+        <option value="Bhopal" selected>Bhopal</option>
+      </select>
+    </div>
+
+    <div class="input-group" id="days-group">
+      <label for="days">Enter the Number of Days</label>
+      <input type="number" id="days" min="1" max="30" placeholder="Enter the number of days">
+    </div>
+
+    <div class="button-group" id="submit-group" style="display:none;">
+      <button onclick="handleSubmit()">Submit</button>
+    </div>
+  </div>
+
+  <div class="results-container" id="results-container" style="display:none;">
+    <h1> Welcome </h1>
+    <h1>Places to Visit</h1>
+    <div id="cards-container"></div>
+  </div>
+
+  <script>
+    function showInBudget() {
+      document.getElementById("in-budget-group").style.display = "block";
+      document.getElementById("over-budget-group").style.display = "none";
+      document.getElementById("submit-group").style.display = "block";
+    }
+
+    function showOverBudget() {
+      document.getElementById("over-budget-group").style.display = "block";
+      document.getElementById("in-budget-group").style.display = "none";
+      document.getElementById("submit-group").style.display = "block";
+    }
+
+    document.getElementById("in-budget").addEventListener("input", function () {
+      const value = parseInt(this.value, 10);
+      if (value > 5000) {
+        alert("You have exceeded the budget limit! Please keep it within ₹5000.");
+        this.value = 5000; // Reset to 5000
+      }
+    });
+
+    function handleCardClick(event) {
+      const cards = document.querySelectorAll(".card");
+      cards.forEach(card => card.classList.remove("selected"));
+      event.currentTarget.classList.add("selected");
+    }
+    
+    function handleSubmit() {
+      const places = [
+        { 
+          name: "Lake View", 
+          description: "A beautiful view of the lake surrounded by nature.", 
+          image: "https://static.wixstatic.com/media/befa2c_46fe599adcae4d268111969697e81e0d~mv2.jpg/v1/fill/w_980,h_551,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/befa2c_46fe599adcae4d268111969697e81e0d~mv2.jpg",
+          bus: "₹150 (Public transport)",
+          cars: "₹1500 (Car rental for a day)",
+          hotels: ["₹2000 for budget stay"],
+          food: ["₹1000 for food (Street food, cafe near lake)"]
+        },
+        { 
+          name: "New Market", 
+          description: "A vibrant shopping area with a variety of stores and eateries.", 
+          image: "https://www.fabhotels.com/blog/wp-content/uploads/2023/04/New-Market-min.jpg",
+          bus: "₹100 (Public transport)",
+          cars: "₹1200 (Car rental for a day)",
+          hotels: ["₹2000 for budget stay"],
+          food: ["₹1000 for food (Chaat stalls, cafes)"]
+        },
+        { 
+          name: "People's Mall", 
+          description: "A family-friendly mall with shops, a food court, and entertainment options.", 
+          image: "https://i.ytimg.com/vi/NOeepdhU7Nc/maxresdefault.jpg",
+          bus: "₹100 (Public transport)",
+          cars: "₹1200 (Car rental for a day)",
+          hotels: ["₹2000 for budget stay"],
+          food: ["₹1000 for food (Food court, mall restaurant)"]
+        },
+        { 
+          name: "Van Vihar National Park", 
+          description: "A nature reserve with rich biodiversity and beautiful walking trails.", 
+          image: "https://i.ibb.co/t82sDzS/van-vihar-national-park.jpg",
+          bus: "₹150 (Public transport)",
+          cars: "₹1400 (Car rental for a day)",
+          hotels: ["₹2000 for budget stay"],
+          food: ["₹1000 for food (Snacks, local cafes)"]
+        },
+        { 
+          name: "Tekri-View point", 
+          description: "A hilltop viewpoint offering panoramic views of the city and surrounding areas.", 
+          image: "https://thetravelb.com/wp-content/uploads/2022/06/2-28-768x1024.jpg",
+          bus: "₹60 (Bus to hill base)",
+          cars: "₹1500 (Car rental for a day)",
+          hotels: ["₹2000 for budget stay"],
+          food: ["₹1000 for food (Tea stalls, local cafes)"]
+        },
+        { 
+          name: "Bhojpur Temple", 
+          description: "An ancient temple known for its stunning architecture and historical significance.", 
+          image: "https://hblimg.mmtcdn.com/content/hubble/img/bhopal/mmt/activities/m_Bhojpur%20Temple-1_l_360_640.jpg",
+          bus: "₹60 (Bus to Bhojpur village)",
+          cars: "₹1500 (Car rental for a day)",
+          hotels: ["₹1500 for budget stay"],
+          food: ["₹1000 for food (Snacks, local dhabas)"]
+        }
+      ];
+
+      const cardsContainer = document.getElementById("cards-container");
+      cardsContainer.innerHTML = "";
+
+      places.forEach(place => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <img src="${place.image}" alt="${place.name}">
+          <h3>${place.name}</h3>
+          <p>${place.description}</p>
+          <h4>Bus: ${place.bus}</h4>
+          <h4>Car: ${place.cars}</h4>
+          <h4>Hotels:</h4>
+          <ul>
+            ${place.hotels.map(hotel => `<li>${hotel}</li>`).join("")}
+          </ul>
+          <h4>Food:</h4>
+          <ul>
+            ${place.food.map(item => `<li>${item}</li>`).join("")}
+          </ul>
+        `;
+        card.addEventListener("click", handleCardClick);
+        cardsContainer.appendChild(card);
+      });
+      document.querySelector(".budget-container").style.display = "none";
+      document.querySelector(".results-container").style.display = "block";
+    }
+  </script>
+</body>
+</html>
